@@ -1,0 +1,13 @@
+<div class="d-flex align-items-center justify-content-between">
+    <pagination *ngIf="isNewed" class="justify-content-center pagination-sm" [totalItems]='totalItems' [maxSize]='5' [itemsPerPage]='currentItemCountPerPage' (pageChanged)="routeTo($event.page)" [(ngModel)]="currentPage" [customPreviousTemplate]="prevTemplate"
+        [customNextTemplate]="nextTemplate">
+    </pagination>
+
+    <ng-template #prevTemplate let-disabled="disabled" let-currentPage="currentPage">
+        <i class="fas fa-chevron-left"></i>
+    </ng-template>
+
+    <ng-template #nextTemplate let-disabled="disabled" let-currentPage="currentPage">
+        <i class="fas fa-chevron-right"></i>
+    </ng-template>
+</div>

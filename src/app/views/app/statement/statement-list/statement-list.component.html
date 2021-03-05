@@ -1,0 +1,296 @@
+<form [formGroup]="statementForm" (ngSubmit)="save()" class="pl-32 pr-32 mt-40">
+
+    <div class="table-wrapper">
+        <div class="d-flex wrap justify-between align-center pt-18 pb-40 p-lr-40">
+            <div class="btn-group actions-wrapper link" dropdown>
+                <h1 dropdownToggle class="dropdown-toggle companyNames d-flex align-center">{{selectedCompany.name}} <i class="fas fa-chevron-down"></i></h1>
+                <!-- <img id="button-animated" dropdownToggle type="button" class="dropdown-toggle" aria-controls="dropdown-animated" src="assets/images/dots.svg" alt=""> -->
+                <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="button-animated">
+
+                    <li (click)="toggleToFirstPage();page=1;selectedCompany=company;getStatementList()" role="menuitem" *ngFor="let company of companyList">
+                        <a class="dropdown-item">{{company.name}}</a>
+                    </li>
+                </ul>
+            </div>
+            <button type="button" class="btn btn-primary ml-12" (click)="addStatement(true)">Add new row</button>
+        </div>
+
+        <table class="w-100" formArrayName="statements" *ngIf="statements.controls?.length>0">
+            <tr>
+                <th>
+                    <div class="d-flex align-center">
+                        <img (click)="filter('id')" src="assets/images/filter-arrow-down.svg" alt="">
+                        <span>
+                            ID
+                        </span>
+                        <div class="relative">
+                            <img src="assets/images/filter-icon-2.svg" alt="">
+                            <div class="filter-input">
+                                <input type="text" (keyup)="searchTxt('id',$event);">
+                            </div>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex align-center">
+                        <img src="assets/images/filter-arrow-down.svg" alt="">
+                        <span>
+                            Company
+                        </span>
+
+                        <div class="btn-group link" dropdown (mouseover)="companyFilterDropdown=true" [isOpen]="companyFilterDropdown">
+                            <span dropdownToggle class="dropdown-toggle companyNames d-flex align-center">
+                                
+                                <img src="assets/images/filter-icon-2.svg" alt="">
+                            </span>
+
+                            <ul (mouseleave)="companyFilterDropdown=false" id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="button-animated">
+
+                                <li (click)="toggleToFirstPage();page=1;selectedCompany=company;getStatementList()" role="menuitem" *ngFor="let company of companyList">
+                                    <a class="dropdown-item" [class.active]="company.name===selectedCompany.name">{{company.name}}</a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex align-center">
+                        <img (click)="filter('date')" src="assets/images/filter-arrow-down.svg" alt="">
+                        <span>
+                            Date
+                            
+                        </span>
+                        <div class="relative">
+                            <img src="assets/images/filter-icon-2.svg" alt="" (mouseover)="isDateFilterShown=true">
+                            <div class="filter-input" [class.d-block]="isDateFilterShown">
+                                <!-- <input type="text" bsDatepicker (onHidden)="datas[pointIndex].isDateFocused=true;updateRow(data,pointIndex,datas[pointIndex].id);"> -->
+                                <input type="text" bsDatepicker (bsValueChange)="searchTxt('date', $event);isDateFilterShown=false">
+                            </div>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex align-center">
+                        <img (click)="filter('revenue')" src="assets/images/filter-arrow-down.svg" alt="">
+                        <span>
+                            Revenue
+                        </span>
+                        <div class="relative">
+                            <img src="assets/images/filter-icon-2.svg" alt="">
+                            <div class="filter-input">
+                                <input type="text" (keyup)="searchTxt('revenue',$event);">
+                            </div>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex align-center">
+                        <img (click)="filter('grossProfit')" src="assets/images/filter-arrow-down.svg" alt="">
+                        <span>
+                            Gross profit
+                        </span>
+                        <div class="relative">
+                            <img src="assets/images/filter-icon-2.svg" alt="">
+                            <div class="filter-input">
+                                <input type="text" (keyup)="searchTxt('grossProfit',$event);">
+                            </div>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex align-center">
+                        <img (click)="filter('ebit')" src="assets/images/filter-arrow-down.svg" alt="">
+                        <span>
+                            EBIT
+                        </span>
+                        <div class="relative">
+                            <img src="assets/images/filter-icon-2.svg" alt="">
+                            <div class="filter-input">
+                                <input type="text" (keyup)="searchTxt('ebit',$event);">
+                            </div>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex align-center">
+                        <img (click)="filter('ebitda')" src="assets/images/filter-arrow-down.svg" alt="">
+                        <span>
+                            EBITDA
+                        </span>
+                        <div class="relative">
+                            <img src="assets/images/filter-icon-2.svg" alt="">
+                            <div class="filter-input">
+                                <input type="text" (keyup)="searchTxt('ebitda',$event);">
+                            </div>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex align-center">
+                        <img (click)="filter('tax_expense')" src="assets/images/filter-arrow-down.svg" alt="">
+                        <span>
+                            Tax expense
+                        </span>
+                        <div class="relative">
+                            <img src="assets/images/filter-icon-2.svg" alt="">
+                            <div class="filter-input">
+                                <input type="text" (keyup)="searchTxt('tax_expense',$event);">
+                            </div>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex align-center">
+                        <img (click)="('net_profit')" src="assets/images/filter-arrow-down.svg" alt="">
+                        <span>
+                            Net profit
+                        </span>
+                        <div class="relative">
+                            <img src="assets/images/filter-icon-2.svg" alt="">
+                            <div class="filter-input">
+                                <input type="text" (keyup)="searchTxt('net_profit',$event);">
+                            </div>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex align-center">
+                        <img (click)="filter('tax_paid')" src="assets/images/filter-arrow-down.svg" alt="">
+                        <span>
+                            tax paid
+                        </span>
+                        <div class="relative">
+                            <img src="assets/images/filter-icon-2.svg" alt="">
+                            <div class="filter-input">
+                                <input type="text" (keyup)="searchTxt('tax_paid',$event);">
+                            </div>
+                        </div>
+                    </div>
+                </th>
+                <th></th>
+            </tr>
+            <tr *ngFor="let data of statements.controls; let pointIndex = index" [formGroupName]="pointIndex" [class.selected]="pointIndex===selectedRowIndex" [class.isDeleted]="datas[pointIndex].isDeleted" [class.isDublicated]="datas[pointIndex].isDublicated">
+
+                <td>
+                    <input type="number" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isIdFocused" (keydown)="datas[pointIndex].isIdFocused=true" [size]="data.get('id').value?.length +2 || 1" formControlName="id" (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
+                </td>
+                <td>
+                    <!-- <input type="text" 
+                    [class.has-border]="data.get('isNew').value"
+                     [class.bold]="datas[pointIndex].isCompanyFocused" 
+                     (keydown)="datas[pointIndex].isCompanyFocused=true" 
+                     [size]="data.get('company').value?.length +2 || 1" 
+                     formControlName="company" 
+                     (blur)="updateRow(data,pointIndex,datas[pointIndex].id)"> -->
+                    <ng-select class="link" [clearable]="false" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isCompanyFocused" formControlName="company" (change)="datas[pointIndex].isIdFocused=true;updateRow(data,pointIndex,datas[pointIndex].id);
+                        datas[pointIndex].isCompanyFocused=true" [items]="companyList" bindLabel="name" bindValue="name" [searchable]="false">
+                    </ng-select>
+                </td>
+                <td>
+                    <input type="text" bsDatepicker [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isDateFocused" (keydown)="datas[pointIndex].isDateFocused=true" formControlName="date" (onHidden)="datas[pointIndex].isDateFocused=true;updateRow(data,pointIndex,datas[pointIndex].id);">
+                    <!-- <input type="text" bsDatepicker [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isDateFocused" (keydown)="datas[pointIndex].isDateFocused=true" formControlName="date" (bsValueChange)="datas[pointIndex].isDateFocused=true;updateRow(data,pointIndex,datas[pointIndex].id);"> -->
+                    <!-- <input type="text"
+           placeholder="Daterangepicker"
+           class="form-control"
+           bsDaterangepicker> -->
+                </td>
+                <td>
+                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isRevenueFocused" (keydown)="datas[pointIndex].isRevenueFocused=true" [size]="data.get('revenue').value?.length +2 || 1" formControlName="revenue" (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
+                </td>
+                <td>
+                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isGrossProfitFocused" (keydown)="datas[pointIndex].isGrossProfitFocused=true" [size]="data.get('grossProfit').value?.length +2 || 1" formControlName="grossProfit"
+                        (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
+                </td>
+                <td>
+                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isEbitFocused" (keydown)="datas[pointIndex].isEbitFocused=true" [size]="data.get('ebit').value?.length +2 || 1" formControlName="ebit" (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
+                </td>
+                <td>
+                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isEbitdaFocused" (keydown)="datas[pointIndex].isEbitdaFocused=true" [size]="data.get('ebitda').value?.length +2 || 1" formControlName="ebitda" (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
+                </td>
+                <td>
+                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isTax_expenseFocused" (keydown)="datas[pointIndex].isTax_expenseFocused=true" [size]="data.get('tax_expense').value?.length +2 || 1" formControlName="tax_expense"
+                        (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
+                </td>
+                <td>
+                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isNet_profitFocused" (keydown)="datas[pointIndex].isNet_profitFocused=true" [size]="data.get('net_profit').value?.length +2 || 1" formControlName="net_profit"
+                        (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
+                </td>
+                <td>
+                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isTax_paidFocused" (keydown)="datas[pointIndex].isTax_paidFocused=true" [size]="data.get('tax_paid').value?.length +2 || 1" formControlName="tax_paid" (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
+                </td>
+                <td>
+                    <div class="btn-group actions-wrapper link" dropdown (onShown)="onShown(pointIndex)" (isOpenChange)="isOpenChange($event)">
+                        <img id="button-animated" dropdownToggle type="button" class="dropdown-toggle" aria-controls="dropdown-animated" src="assets/images/dots.svg" alt="">
+                        <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="button-animated">
+                            <li *ngIf="!datas[pointIndex].isDeleted" role="menuitem">
+                                <a class="dropdown-item" (click)="addStatement(true,datas[pointIndex].id)">Add Row</a>
+                            </li>
+                            <li *ngIf="!datas[pointIndex].isDeleted" role="menuitem">
+                                <a class="dropdown-item" (click)="dublicateData(datas[pointIndex].id)">Dublicate</a>
+                            </li>
+                            <li role="menuitem">
+                                <a class="dropdown-item" (click)="deleteData(datas[pointIndex].id)">Delete</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <app-custom-pagination class="pt-16 pb-32 d-flex justify-end" *ngIf="itemCount>count" [goFirstPage]="onFirstPage" [totalItems]="itemCount" (onChange)="page = $event.activePage; count = $event.itemCountPerPage; getStatementList('');">
+        </app-custom-pagination>
+    </div>
+
+    <div class="button-group d-flex wrap justify-between mt-32 mb-32">
+        <button type="button" class="btn btn-warning" (click)="lgModal.show()">History</button>
+        <div class="d-flex wrap">
+            <button type="button" class="btn btn-outline-primary" (click)="hasChanges=false;getStatementList('reset')">Cancel</button>
+            <button class="btn btn-primary ml-12">Save</button>
+        </div>
+    </div>
+</form>
+
+
+<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-sizes-name1" class="modal-title pull-left">Action Back Logs</h4>
+                <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <table class="w-100">
+                    <tr>
+                        <th>User</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr>
+                        <td>Cavidan Talibov</td>
+                        <td>25.02.2021</td>
+                        <td>12 ID-li elementi sildi</td>
+                    </tr>
+                    <tr>
+                        <td>Cavidan Talibov</td>
+                        <td>25.02.2021</td>
+                        <td>12 ID-li elementi sildi</td>
+                    </tr>
+                    <tr>
+                        <td>Cavidan Talibov</td>
+                        <td>25.02.2021</td>
+                        <td>12 ID-li elementi sildi</td>
+                    </tr>
+                    <tr>
+                        <td>Cavidan Talibov</td>
+                        <td>25.02.2021</td>
+                        <td>12 ID-li elementi sildi</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
