@@ -1,6 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { CustomFormatterPipe } from 'src/app/pipes/custom-formatter.pipe';
 import { DataService } from 'src/app/services/data.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
@@ -30,6 +31,12 @@ export class StatementListComponent implements OnInit {
   
   selectedCompany;
 
+  currencyOptions={
+    prefix: ' ',
+    thousands: ',',
+    decimal: '.'
+  }
+
   get statements() {
     return this.statementForm.get('statements') as FormArray;
   }
@@ -37,7 +44,8 @@ export class StatementListComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private dataService: DataService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private customFormatter: CustomFormatterPipe
   ) { }
 
   ngOnInit() {
@@ -187,6 +195,16 @@ export class StatementListComponent implements OnInit {
     // this.getStatementList()
   }
 
+  undoData(id){
+    let data = this.datas.find(item => +item.id === +id);
+    data.isDeleted = false;
+    data.isDublicated = false;
+    data.isNew = false;
+
+    this.dataService.undoData(id,data);
+    // this.dataService.statements.splice(this.datas.findIndex(item => +item.id === +id),0,data)
+  }
+
   dublicateData(id) {
     this.hasChanges = true;
     let dataCopy = this.dataService.cloneObj(this.datas.find(item => +item.id === +id));
@@ -295,6 +313,40 @@ export class StatementListComponent implements OnInit {
       return  (+date1.getMonth() + 1) + '/' + date1.getDate() + '/' + date1.getFullYear();
     }
     return '';
+  }
+
+  focusInput(e,i){
+    
+    if(!e.target.closest('td').classList.contains('show-input-full')&&!this.getStatement(i).get('isNew').value){
+      if(e.target.closest('td').classList.contains('show-input-half')){
+        this.removeShowInputClass(i);
+        e.target.closest('td').classList.add('show-input-full');
+        e.target.closest('td').querySelector('input').focus();
+      } else {
+        this.removeShowInputClass(i);
+        e.target.closest('td').classList.add('show-input-half');
+      }
+    } else if(this.getStatement(i).get('isNew').value){
+      this.removeShowInputClass(i);
+        e.target.closest('td').classList.add('show-input-full');
+        e.target.closest('td').querySelector('input').focus();
+    }
+
+    // document.getElementById('')
+  }
+
+  removeShowInputClass(i=-1){
+    if(i===-1){
+      document.querySelectorAll('td').forEach(item=>{
+        item.classList.remove('show-input-half')
+        item.classList.remove('show-input-full')
+      })
+    }else if(!this.getStatement(i).get('isNew').value){
+      document.querySelectorAll('td').forEach(item=>{
+        item.classList.remove('show-input-half')
+        item.classList.remove('show-input-full')
+      })
+    }
   }
 
 }

@@ -11,6 +11,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { CurrencyMaskModule } from "ng2-currency-mask";
+import { CustomFormatterPipe } from 'src/app/pipes/custom-formatter.pipe';
 
 @NgModule({
   imports: [
@@ -24,10 +26,12 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     NgSelectModule,
     // BrowserAnimationsModule,
     BsDatepickerModule.forRoot(),
+    CurrencyMaskModule
   ],
   declarations: [
     StatementComponent,
-    StatementListComponent
+    StatementListComponent,
+    CustomFormatterPipe
   ]
 })
 export class StatementModule { }

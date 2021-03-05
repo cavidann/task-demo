@@ -1,21 +1,21 @@
 <form [formGroup]="statementForm" (ngSubmit)="save()" class="pl-32 pr-32 mt-40">
 
-    <div class="table-wrapper">
-        <div class="d-flex wrap justify-between align-center pt-18 pb-40 p-lr-40">
-            <div class="btn-group actions-wrapper link" dropdown>
-                <h1 dropdownToggle class="dropdown-toggle companyNames d-flex align-center">{{selectedCompany.name}} <i class="fas fa-chevron-down"></i></h1>
-                <!-- <img id="button-animated" dropdownToggle type="button" class="dropdown-toggle" aria-controls="dropdown-animated" src="assets/images/dots.svg" alt=""> -->
-                <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="button-animated">
+    <ul class="d-flex wrap mb-32">
+        <li (click)="toggleToFirstPage();page=1;selectedCompany=company;getStatementList()" *ngFor="let company of companyList">
+            <button class="btn btn-primary ml-12">{{company.name}}</button>
+        </li>
+    </ul>
 
-                    <li (click)="toggleToFirstPage();page=1;selectedCompany=company;getStatementList()" role="menuitem" *ngFor="let company of companyList">
-                        <a class="dropdown-item">{{company.name}}</a>
-                    </li>
-                </ul>
+    <div class="table-wrapper">
+        <div class="d-flex wrap justify-between align-center pt-18 pb-18 p-lr-40">
+            <div class="btn-group actions-wrapper link" dropdown>
+                <h1 dropdownToggle class="dropdown-toggle companyNames d-flex align-center">{{selectedCompany.name}} </h1>
+
             </div>
             <button type="button" class="btn btn-primary ml-12" (click)="addStatement(true)">Add new row</button>
         </div>
 
-        <table class="w-100" formArrayName="statements" *ngIf="statements.controls?.length>0">
+        <table class="w-100" formArrayName="statements">
             <tr>
                 <th>
                     <div class="d-flex align-center">
@@ -65,7 +65,6 @@
                         <div class="relative">
                             <img src="assets/images/filter-icon-2.svg" alt="" (mouseover)="isDateFilterShown=true">
                             <div class="filter-input" [class.d-block]="isDateFilterShown">
-                                <!-- <input type="text" bsDatepicker (onHidden)="datas[pointIndex].isDateFocused=true;updateRow(data,pointIndex,datas[pointIndex].id);"> -->
                                 <input type="text" bsDatepicker (bsValueChange)="searchTxt('date', $event);isDateFilterShown=false">
                             </div>
                         </div>
@@ -171,72 +170,78 @@
                 </th>
                 <th></th>
             </tr>
-            <tr *ngFor="let data of statements.controls; let pointIndex = index" [formGroupName]="pointIndex" [class.selected]="pointIndex===selectedRowIndex" [class.isDeleted]="datas[pointIndex].isDeleted" [class.isDublicated]="datas[pointIndex].isDublicated">
-
-                <td>
-                    <input type="number" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isIdFocused" (keydown)="datas[pointIndex].isIdFocused=true" [size]="data.get('id').value?.length +2 || 1" formControlName="id" (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
-                </td>
-                <td>
-                    <!-- <input type="text" 
-                    [class.has-border]="data.get('isNew').value"
-                     [class.bold]="datas[pointIndex].isCompanyFocused" 
-                     (keydown)="datas[pointIndex].isCompanyFocused=true" 
-                     [size]="data.get('company').value?.length +2 || 1" 
-                     formControlName="company" 
-                     (blur)="updateRow(data,pointIndex,datas[pointIndex].id)"> -->
-                    <ng-select class="link" [clearable]="false" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isCompanyFocused" formControlName="company" (change)="datas[pointIndex].isIdFocused=true;updateRow(data,pointIndex,datas[pointIndex].id);
-                        datas[pointIndex].isCompanyFocused=true" [items]="companyList" bindLabel="name" bindValue="name" [searchable]="false">
-                    </ng-select>
-                </td>
-                <td>
-                    <input type="text" bsDatepicker [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isDateFocused" (keydown)="datas[pointIndex].isDateFocused=true" formControlName="date" (onHidden)="datas[pointIndex].isDateFocused=true;updateRow(data,pointIndex,datas[pointIndex].id);">
-                    <!-- <input type="text" bsDatepicker [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isDateFocused" (keydown)="datas[pointIndex].isDateFocused=true" formControlName="date" (bsValueChange)="datas[pointIndex].isDateFocused=true;updateRow(data,pointIndex,datas[pointIndex].id);"> -->
-                    <!-- <input type="text"
-           placeholder="Daterangepicker"
-           class="form-control"
-           bsDaterangepicker> -->
-                </td>
-                <td>
-                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isRevenueFocused" (keydown)="datas[pointIndex].isRevenueFocused=true" [size]="data.get('revenue').value?.length +2 || 1" formControlName="revenue" (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
-                </td>
-                <td>
-                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isGrossProfitFocused" (keydown)="datas[pointIndex].isGrossProfitFocused=true" [size]="data.get('grossProfit').value?.length +2 || 1" formControlName="grossProfit"
-                        (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
-                </td>
-                <td>
-                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isEbitFocused" (keydown)="datas[pointIndex].isEbitFocused=true" [size]="data.get('ebit').value?.length +2 || 1" formControlName="ebit" (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
-                </td>
-                <td>
-                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isEbitdaFocused" (keydown)="datas[pointIndex].isEbitdaFocused=true" [size]="data.get('ebitda').value?.length +2 || 1" formControlName="ebitda" (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
-                </td>
-                <td>
-                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isTax_expenseFocused" (keydown)="datas[pointIndex].isTax_expenseFocused=true" [size]="data.get('tax_expense').value?.length +2 || 1" formControlName="tax_expense"
-                        (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
-                </td>
-                <td>
-                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isNet_profitFocused" (keydown)="datas[pointIndex].isNet_profitFocused=true" [size]="data.get('net_profit').value?.length +2 || 1" formControlName="net_profit"
-                        (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
-                </td>
-                <td>
-                    <input type="text" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isTax_paidFocused" (keydown)="datas[pointIndex].isTax_paidFocused=true" [size]="data.get('tax_paid').value?.length +2 || 1" formControlName="tax_paid" (blur)="updateRow(data,pointIndex,datas[pointIndex].id)">
-                </td>
-                <td>
-                    <div class="btn-group actions-wrapper link" dropdown (onShown)="onShown(pointIndex)" (isOpenChange)="isOpenChange($event)">
-                        <img id="button-animated" dropdownToggle type="button" class="dropdown-toggle" aria-controls="dropdown-animated" src="assets/images/dots.svg" alt="">
-                        <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="button-animated">
-                            <li *ngIf="!datas[pointIndex].isDeleted" role="menuitem">
-                                <a class="dropdown-item" (click)="addStatement(true,datas[pointIndex].id)">Add Row</a>
-                            </li>
-                            <li *ngIf="!datas[pointIndex].isDeleted" role="menuitem">
-                                <a class="dropdown-item" (click)="dublicateData(datas[pointIndex].id)">Dublicate</a>
-                            </li>
-                            <li role="menuitem">
-                                <a class="dropdown-item" (click)="deleteData(datas[pointIndex].id)">Delete</a>
-                            </li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
+            <tbody *ngIf="statements.controls?.length>0">
+                <tr *ngFor="let data of statements.controls; let pointIndex = index" [formGroupName]="pointIndex" [class.selected]="pointIndex===selectedRowIndex" [class.isDeleted]="datas[pointIndex].isDeleted" [class.isDublicated]="datas[pointIndex].isDublicated">
+                    <td (click)="focusInput($event,pointIndex)" [class.show-input-full]="data.get('isNew').value">
+                        <p [class.bold]="datas[pointIndex].isIdFocused" class="d-flex justify-center align-center">{{data.get('id').value}}</p>
+                        <input type="number" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isIdFocused" (keydown)="datas[pointIndex].isIdFocused=true" [size]="data.get('id').value?.length +2 || 1" formControlName="id" (blur)="removeShowInputClass(pointIndex);updateRow(data,pointIndex,datas[pointIndex].id)">
+                    </td>
+                    <td (click)="focusInput($event,pointIndex)" [class.show-input-full]="data.get('isNew').value">
+                        <p [class.bold]="datas[pointIndex].isCompanyFocused" class="d-flex justify-center align-center">{{data.get('company').value}}</p>
+                        <ng-select (blur)="removeShowInputClass(pointIndex)" class="link" [clearable]="false" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isCompanyFocused" formControlName="company" (change)="datas[pointIndex].isIdFocused=true;updateRow(data,pointIndex,datas[pointIndex].id);
+                            datas[pointIndex].isCompanyFocused=true" [items]="companyList" bindLabel="name" bindValue="name" [searchable]="false">
+                        </ng-select>
+                    </td>
+                    <td (click)="focusInput($event,pointIndex)" [class.show-input-full]="data.get('isNew').value">
+                        <p [class.bold]="datas[pointIndex].isDateFocused" class="d-flex justify-center align-center">{{data.get('date').value| date: 'MM/dd/yyyy'}}</p>
+                        <input type="text" bsDatepicker [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isDateFocused" (keydown)="datas[pointIndex].isDateFocused=true" formControlName="date" (blur)="removeShowInputClass(pointIndex)" (onHidden)="removeShowInputClass(pointIndex);datas[pointIndex].isDateFocused=true;updateRow(data,pointIndex,datas[pointIndex].id);">
+                    </td>
+                    <td (click)="focusInput($event,pointIndex)" [class.show-input-full]="data.get('isNew').value">
+                        <p [class.bold]="datas[pointIndex].isRevenueFocused" class="d-flex justify-center align-center">{{data.get('revenue').value | customFormatter}}</p>
+                        <input type="text" currencyMask [options]="currencyOptions" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isRevenueFocused" (keydown)="datas[pointIndex].isRevenueFocused=true" [size]="data.get('revenue').value?.length +2 || 1"
+                            formControlName="revenue" (blur)="removeShowInputClass(pointIndex);updateRow(data,pointIndex,datas[pointIndex].id)">
+                    </td>
+                    <td (click)="focusInput($event,pointIndex)" [class.show-input-full]="data.get('isNew').value">
+                        <p [class.bold]="datas[pointIndex].isGrossProfitFocused" class="d-flex justify-center align-center">{{data.get('grossProfit').value| customFormatter}}</p>
+                        <input type="text" currencyMask [options]="currencyOptions" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isGrossProfitFocused" (keydown)="datas[pointIndex].isGrossProfitFocused=true" [size]="data.get('grossProfit').value?.length +2 || 1"
+                            formControlName="grossProfit" (blur)="removeShowInputClass(pointIndex);updateRow(data,pointIndex,datas[pointIndex].id)">
+                    </td>
+                    <td (click)="focusInput($event,pointIndex)" [class.show-input-full]="data.get('isNew').value">
+                        <p [class.bold]="datas[pointIndex].isEbitFocused" class="d-flex justify-center align-center">{{data.get('ebit').value| customFormatter}}</p>
+                        <input type="text" currencyMask [options]="currencyOptions" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isEbitFocused" (keydown)="datas[pointIndex].isEbitFocused=true" [size]="data.get('ebit').value?.length +2 || 1" formControlName="ebit"
+                            (blur)="removeShowInputClass(pointIndex);updateRow(data,pointIndex,datas[pointIndex].id)">
+                    </td>
+                    <td (click)="focusInput($event,pointIndex)" [class.show-input-full]="data.get('isNew').value">
+                        <p [class.bold]="datas[pointIndex].isEbitdaFocused" class="d-flex justify-center align-center">{{data.get('ebitda').value| customFormatter}}</p>
+                        <input type="text" currencyMask [options]="currencyOptions" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isEbitdaFocused" (keydown)="datas[pointIndex].isEbitdaFocused=true" [size]="data.get('ebitda').value?.length +2 || 1"
+                            formControlName="ebitda" (blur)="removeShowInputClass(pointIndex);updateRow(data,pointIndex,datas[pointIndex].id)">
+                    </td>
+                    <td (click)="focusInput($event,pointIndex)" [class.show-input-full]="data.get('isNew').value">
+                        <p [class.bold]="datas[pointIndex].isTax_expenseFocused" class="d-flex justify-center align-center">{{data.get('tax_expense').value| customFormatter}}</p>
+                        <input type="text" currencyMask [options]="currencyOptions" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isTax_expenseFocused" (keydown)="datas[pointIndex].isTax_expenseFocused=true" [size]="data.get('tax_expense').value?.length +2 || 1"
+                            formControlName="tax_expense" (blur)="removeShowInputClass(pointIndex);updateRow(data,pointIndex,datas[pointIndex].id)">
+                    </td>
+                    <td (click)="focusInput($event,pointIndex)" [class.show-input-full]="data.get('isNew').value">
+                        <p [class.bold]="datas[pointIndex].isNet_profitFocused" class="d-flex justify-center align-center">{{data.get('net_profit').value| customFormatter}}</p>
+                        <input type="text" currencyMask [options]="currencyOptions" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isNet_profitFocused" (keydown)="datas[pointIndex].isNet_profitFocused=true" [size]="data.get('net_profit').value?.length +2 || 1"
+                            formControlName="net_profit" (blur)="removeShowInputClass(pointIndex);updateRow(data,pointIndex,datas[pointIndex].id)">
+                    </td>
+                    <td (click)="focusInput($event,pointIndex)" [class.show-input-full]="data.get('isNew').value">
+                        <p [class.bold]="datas[pointIndex].isTax_paidFocused" class="d-flex justify-center align-center">{{data.get('tax_paid').value| customFormatter}}</p>
+                        <input type="text" currencyMask [options]="currencyOptions" [class.has-border]="data.get('isNew').value" [class.bold]="datas[pointIndex].isTax_paidFocused" (keydown)="datas[pointIndex].isTax_paidFocused=true" [size]="data.get('tax_paid').value?.length +2 || 1"
+                            formControlName="tax_paid" (blur)="removeShowInputClass(pointIndex);updateRow(data,pointIndex,datas[pointIndex].id)">
+                    </td>
+                    <td>
+                        <div class="btn-group actions-wrapper link" dropdown (onShown)="onShown(pointIndex)" (isOpenChange)="isOpenChange($event)">
+                            <img id="button-animated" dropdownToggle type="button" class="dropdown-toggle" aria-controls="dropdown-animated" src="assets/images/dots.svg" alt="">
+                            <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="button-animated">
+                                <li *ngIf="!datas[pointIndex].isDeleted" role="menuitem">
+                                    <a class="dropdown-item" (click)="addStatement(true,datas[pointIndex].id)">Add Row</a>
+                                </li>
+                                <li *ngIf="!datas[pointIndex].isDeleted" role="menuitem">
+                                    <a class="dropdown-item" (click)="dublicateData(datas[pointIndex].id)">Dublicate</a>
+                                </li>
+                                <li *ngIf="!datas[pointIndex].isDeleted" role="menuitem">
+                                    <a class="dropdown-item" (click)="deleteData(datas[pointIndex].id)">Delete</a>
+                                </li>
+                                <li *ngIf="datas[pointIndex].isDeleted" role="menuitem">
+                                    <a class="dropdown-item" (click)="undoData(datas[pointIndex].id)">Undo</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
         </table>
 
         <app-custom-pagination class="pt-16 pb-32 d-flex justify-end" *ngIf="itemCount>count" [goFirstPage]="onFirstPage" [totalItems]="itemCount" (onChange)="page = $event.activePage; count = $event.itemCountPerPage; getStatementList('');">

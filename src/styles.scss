@@ -35,6 +35,10 @@ img {
     align-items: center;
 }
 
+.justify-center {
+    justify-content: center;
+}
+
 .justify-between {
     justify-content: space-between;
 }
@@ -49,6 +53,10 @@ img {
 
 .pt-18 {
     padding-top: 18px;
+}
+
+.pb-18 {
+    padding-bottom: 18px;
 }
 
 .mt-32 {
@@ -172,7 +180,6 @@ header {
     background: #FFFFFF;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.10);
     border-radius: 4px;
-    // overflow-x: auto;
     table {
         img {
             &:first-child {
@@ -196,7 +203,7 @@ header {
                     position: absolute;
                     bottom: 0px;
                     left: -40px;
-                    z-index: 100;
+                    z-index: 151;
                     transform: translate(0%, 100%);
                     background: white;
                     padding: 8px;
@@ -304,7 +311,10 @@ app-custom-pagination {
 
 .isDublicated {
     td {
-        background-color: yellow!important;
+        font-weight: bold!important;
+        input {
+            font-weight: bold!important;
+        }
     }
 }
 
@@ -327,9 +337,6 @@ input {
     border-color: black;
 }
 
-// input {
-//     width: 100%;
-// }
 .modal {
     th {
         font-weight: bold;
@@ -397,7 +404,6 @@ th {
 }
 
 td {
-    // font-family: Helvetica;
     font-size: 12px;
     color: #485465;
     letter-spacing: 0.25px;
@@ -411,7 +417,7 @@ td {
     }
     input {
         width: 100%;
-        text-align: center;
+        text-align: center!important;
     }
 }
 
@@ -427,12 +433,6 @@ th {
     padding: 2px 2px;
 }
 
-tr:nth-child(2) {
-    td {
-        // padding-top: 16px;
-    }
-}
-
 th {
     font-size: 16px;
     color: #485465;
@@ -444,7 +444,6 @@ th {
 }
 
 .ng-select .ng-select-container {
-    // width: max-content!important;
     cursor: pointer;
     margin: 0 auto;
     border: none;
@@ -465,7 +464,6 @@ th {
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
     padding: 12px 16px;
     font-weight: 400!important;
-    // font-size: 16px
 }
 
 .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value {
@@ -506,4 +504,49 @@ th {
 tr,
 td {
     vertical-align: middle;
+    position: relative;
+    color: #485465;
+    &.show-input-half {
+        p {
+            color: white;
+            background-color: #476EE2!important;
+        }
+    }
+    &.show-input-full {
+        p {
+            display: none!important;
+        }
+    }
+    p {
+        display: block;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 150;
+        background-color: white;
+    }
+}
+
+.isDeleted {
+    p {
+        background-color: red!important;
+    }
+}
+
+.selected {
+    p {
+        background-color: #e2e8fc!important;
+    }
+}
+
+.modal-dialog {
+    th,
+    td {
+        text-align: left;
+    }
+    td {
+        width: auto;
+    }
 }

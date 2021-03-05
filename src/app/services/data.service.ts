@@ -218,6 +218,10 @@ export class DataService {
         this.statements.splice(this.statements.findIndex(item => +item.id === +id), 1);
     }
 
+    undoData(id,data){
+        this.statements.splice(this.statements.findIndex(item => +item.id === +id),0,data)
+    }
+
     dublicateData(id) {
         let dataCopy = this.cloneObj(this.statements.find(item => +item.id === +id));
         dataCopy.id = this.statements.length + 1;
