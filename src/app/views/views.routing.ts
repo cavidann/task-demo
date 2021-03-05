@@ -9,8 +9,8 @@ let routes: Routes = [
     component: ViewsComponent,
     children: [
       { path: '', loadChildren: () => import('./app/app.module').then(m => m.AppModule) },
-      { path: '**', redirectTo: 'error' },
-      { path: 'error', component: ErrorComponent },
+      // { path: '**', redirectTo: 'error' },
+      // { path: 'error', component: ErrorComponent },
     ]
   },
 ];
